@@ -25,7 +25,7 @@ let users = [
 
 // GET request: Retrieve all users
 router.get("/",(req,res)=>{
-    res.send(JSON.stringify({users},null,4));
+    res.send(users);
 });
 
 // GET by specific ID request: Retrieve a single user with email ID
@@ -35,6 +35,31 @@ router.get("/:email",(req,res)=>{
     res.send(filtered_users);
 });
 
+//GET by specific ID request: Retrieving users with the lastName
+router.get("/lastName/:lastName",(req,res) => {
+    const lastName = req.params.lastName
+    let filtered_lastName = users.filter((user) => user.lastName === lastName)
+    res.send(filtered_lastName)
+})
+
+//Sorting with the User's DOB
+
+function getDateFromString(strDate) {
+    let [dd,mm,yyyy] = strDate.split('-')
+    return new Date(`${yyyy}/${mm}/${dd}`);
+}
+    
+// console.log(sorted_users);
+router.get("/sort",(req,res)=>{
+    let sorted_users=[...users].sort(function(a, b) {
+        let d1 = getDateFromString(a.DOB);
+        let d2 = getDateFromString(b.DOB);
+        console.log("Debug: d1=",d1,"|d2=",d2);
+            return d1-d2;
+          });
+    res.send(sorted_users);
+    console.log(sorted_users);
+});
 
 // POST request: Create a new user
 router.post("/",(req,res)=>{
